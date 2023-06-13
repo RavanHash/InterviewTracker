@@ -24,7 +24,6 @@ public class InterviewsController : ControllerBase
     public async Task<IActionResult> CreateInterview([FromBody] CreateInterviewDto createInterviewDto)
     {
         var newInterview = new Interview();
-
         _mapper.Map(createInterviewDto, newInterview);
 
         await _context.Interviews.AddAsync(newInterview);
@@ -36,10 +35,22 @@ public class InterviewsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GetInterviewDto>>> GetInterviews()
     {
-        var tickets = await _context.Interviews.ToListAsync();
+        var interviews = await _context.Interviews.ToListAsync();
+        var convertedInterviews = _mapper.Map<IEnumerable<GetInterviewDto>>(interviews);
 
-        var convertedTickets = _mapper.Map<IEnumerable<GetInterviewDto>>(tickets);
+        return Ok(convertedInterviews);
+    }
 
-        return Ok(convertedTickets);
+    [HttpGet]
+    [Route("{id}")]
+    public async Task<ActionResult<GetInterviewDto>> GetInterviewById([FromRoute] long id)
+    {
+        var interview = await _context.Interviews.FirstOrDefaultAsync(i => i.Id == id);
+
+        if (interview is null) return NotFound("Interview Not Found");
+
+        var convertedInterview = _mapper.Map<GetInterviewDto>(interview);
+
+        return Ok(convertedInterview);
     }
 }
