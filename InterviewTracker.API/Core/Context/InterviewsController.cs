@@ -29,7 +29,7 @@ public class InterviewsController : ControllerBase
         await _context.Interviews.AddAsync(newInterview);
         await _context.SaveChangesAsync();
 
-        return Ok("Interview saved successfully");
+        return Ok("Interview Saved Successfully");
     }
 
     [HttpGet]
@@ -52,5 +52,21 @@ public class InterviewsController : ControllerBase
         var convertedInterview = _mapper.Map<GetInterviewDto>(interview);
 
         return Ok(convertedInterview);
+    }
+
+    [HttpPut]
+    [Route("edit/{id}")]
+    public async Task<IActionResult> EditInterview([FromRoute] long id,
+        [FromBody] UpdateInterviewDto updateInterviewDto)
+    {
+        var interview = await _context.Interviews.FirstOrDefaultAsync(t => t.Id == id);
+
+        if (interview is null) return NotFound("Interviews Not found");
+
+        _mapper.Map(updateInterviewDto, interview);
+        interview.UpdatedAt = DateTime.Now;
+        await _context.SaveChangesAsync();
+
+        return Ok("Interview Updated Successfully");
     }
 }

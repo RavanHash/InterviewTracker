@@ -10,5 +10,6 @@ public class AutoMapperConfigProfile : Profile
     {
         CreateMap<CreateInterviewDto, Interview>();
         CreateMap<Interview, GetInterviewDto>();
+        CreateMap<UpdateInterviewDto, Interview>();
     }
 }
