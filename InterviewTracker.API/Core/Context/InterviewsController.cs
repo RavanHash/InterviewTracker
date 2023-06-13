@@ -46,7 +46,6 @@ public class InterviewsController : ControllerBase
     public async Task<ActionResult<GetInterviewDto>> GetInterviewById([FromRoute] long id)
     {
         var interview = await _context.Interviews.FirstOrDefaultAsync(i => i.Id == id);
-
         if (interview is null) return NotFound("Interview Not Found");
 
         var convertedInterview = _mapper.Map<GetInterviewDto>(interview);
@@ -60,7 +59,6 @@ public class InterviewsController : ControllerBase
         [FromBody] UpdateInterviewDto updateInterviewDto)
     {
         var interview = await _context.Interviews.FirstOrDefaultAsync(t => t.Id == id);
-
         if (interview is null) return NotFound("Interviews Not found");
 
         _mapper.Map(updateInterviewDto, interview);
@@ -68,5 +66,18 @@ public class InterviewsController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok("Interview Updated Successfully");
+    }
+
+    [HttpDelete]
+    [Route("delete/{id}")]
+    public async Task<IActionResult> DeleteInterview([FromRoute] long id)
+    {
+        var interview = await _context.Interviews.FirstOrDefaultAsync(t => t.Id == id);
+        if (interview is null) return NotFound("Interview Not found");
+
+        _context.Interviews.Remove(interview);
+        await _context.SaveChangesAsync();
+
+        return Ok("Interview Deleted successfully");
     }
 }
