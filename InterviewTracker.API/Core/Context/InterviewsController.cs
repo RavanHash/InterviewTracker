@@ -33,9 +33,12 @@ public class InterviewsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetInterviewDto>>> GetInterviews()
+    public async Task<ActionResult<IEnumerable<GetInterviewDto>>> GetInterviews(string? q)
     {
-        var interviews = await _context.Interviews.ToListAsync();
+        IQueryable<Interview> query = _context.Interviews;
+        if (q is not null) query = query.Where(i => i.IntervieweeName.Contains(q));
+
+        var interviews = await query.ToListAsync();
         var convertedInterviews = _mapper.Map<IEnumerable<GetInterviewDto>>(interviews);
 
         return Ok(convertedInterviews);
