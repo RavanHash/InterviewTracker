@@ -1,3 +1,4 @@
+using InterviewTracker.API.Core.AutoMapperConfig;
 using InterviewTracker.API.Core.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("local");
     options.UseSqlServer(connectionString);
 });
+
+builder.Services.AddAutoMapper(typeof(AutoMapperConfigProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
