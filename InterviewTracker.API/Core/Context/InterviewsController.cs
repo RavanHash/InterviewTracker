@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using InterviewTracker.API.Core.DTOs;
 using InterviewTracker.API.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace InterviewTracker.API.Core.Context;
 
@@ -19,7 +21,7 @@ public class InterviewsController : ControllerBase
 
     [HttpPost]
     [Route("create")]
-    public async Task<IActionResult> CreateTicket([FromBody] CreateInterviewDto createInterviewDto)
+    public async Task<IActionResult> CreateInterview([FromBody] CreateInterviewDto createInterviewDto)
     {
         var newInterview = new Interview();
 
@@ -29,5 +31,15 @@ public class InterviewsController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok("Interview saved successfully");
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<GetInterviewDto>>> GetInterviews()
+    {
+        var tickets = await _context.Interviews.ToListAsync();
+
+        var convertedTickets = _mapper.Map<IEnumerable<GetInterviewDto>>(tickets);
+
+        return Ok(convertedTickets);
     }
 }

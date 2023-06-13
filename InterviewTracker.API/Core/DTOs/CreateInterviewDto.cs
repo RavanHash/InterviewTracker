@@ -1,4 +1,4 @@
-﻿namespace InterviewTracker.API.Core.Context;
+﻿namespace InterviewTracker.API.Core.DTOs;
 
 public class CreateInterviewDto
 {
